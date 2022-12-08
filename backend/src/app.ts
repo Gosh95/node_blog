@@ -3,6 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import MongoDB from './global/db/mongo';
+import { Routers } from './types/layers';
+import UserRouter from './routers/user';
 
 class App {
   private app;
@@ -15,11 +17,16 @@ class App {
     this.db = new MongoDB();
 
     this.initMiddlewares();
+    this.initRouters([new UserRouter()]);
   }
 
   private initMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+  }
+
+  private initRouters(routers: Routers[]) {
+    routers.forEach((router) => this.app.use(router.path, router.router));
   }
 
   async run() {
