@@ -55,6 +55,10 @@ class UserValidations {
       })
       .withMessage('Userid param is not object id type.');
   }
+
+  validateEmptyPassword(): ValidationChain {
+    return body('password').notEmpty().withMessage('Password is empty.');
+  }
 }
 
 export default UserValidations;
