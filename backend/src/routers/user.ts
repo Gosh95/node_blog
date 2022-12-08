@@ -23,6 +23,7 @@ class UserRouter implements Routers {
     this.router.post('/', this.userValidator.validateCreateUser(), this.userController.createUser());
     this.router.get('/:userId', this.userValidator.validateUserIdParam(), this.userController.getUserDetail());
     this.router.patch('/:userId', this.userValidator.validateUpdateUser(), this.userController.updateUser());
+    this.router.delete('/:userId', this.userValidator.validateDeleteUser(), this.userController.deleteUser());
   }
 }
 
