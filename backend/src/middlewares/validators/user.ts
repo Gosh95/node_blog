@@ -22,6 +22,15 @@ class UserValidator {
       handleValidationErrors(errors, next);
     };
   }
+
+  validateUserIdParam(): RequestHandler {
+    return async (req, _res, next) => {
+      await this.validations.validateUserIdParams().run(req);
+
+      const errors = validationResult(req);
+      handleValidationErrors(errors, next);
+    };
+  }
 }
 
 export default UserValidator;

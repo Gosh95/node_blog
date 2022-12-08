@@ -1,4 +1,5 @@
-import { body, ValidationChain } from 'express-validator';
+import { body, ValidationChain, param } from 'express-validator';
+import { isObjectIdOrHexString } from 'mongoose';
 
 import { NAME_REGEX, PASSWORD_REGEX } from '../../../global/consts/regex';
 
@@ -43,6 +44,16 @@ class UserValidations {
         }
       })
       .withMessage('Password checker is not equal to password.');
+  }
+
+  validateUserIdParams(): ValidationChain {
+    return param('userId')
+      .custom((value, { req }) => {
+        if (isObjectIdOrHexString(value)) {
+          return true;
+        }
+      })
+      .withMessage('Userid param is not object id type.');
   }
 }
 
