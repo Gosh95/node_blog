@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import MongoDB from './global/db/mongo';
 import { Routers } from './types/layers';
@@ -23,6 +24,7 @@ class App {
   private initMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
   }
 
   private initRouters(routers: Routers[]) {
