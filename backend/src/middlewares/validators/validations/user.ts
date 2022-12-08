@@ -56,6 +56,10 @@ class UserValidations {
       .withMessage('Userid param is not object id type.');
   }
 
+  validateEmptyEmail(): ValidationChain {
+    return body('email').notEmpty().withMessage('Email is empty.');
+  }
+
   validateEmptyPassword(): ValidationChain {
     return body('password').notEmpty().withMessage('Password is empty.');
   }
