@@ -1,9 +1,9 @@
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { Types } from 'mongoose';
 
 import User from '../../models/user';
 import UserMampper from './mapper';
-import { UserCreateDto } from '../../types/dtos/user';
+import { UserCreateDto, UserUpdateDto } from '../../types/dtos/user';
 
 class UserController {
   private userMapper;
@@ -28,10 +28,24 @@ class UserController {
 
   getUserDetail(): RequestHandler {
     return async (req, res, next) => {
-      const userId = req.params.userId;
+      const userId = this.getUserIdParams(req);
       try {
         const user = await this.findUserById(userId);
         return res.status(200).json(this.userMapper.toUserDetailResDto(user));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  updateUser(): RequestHandler {
+    return async (req, res, next) => {
+      const userId = this.getUserIdParams(req);
+      const dto: UserUpdateDto = { ...req.body };
+      try {
+        const user = await this.findUserById(userId);
+        await user.updateOne({ name: dto.name, password: dto.password });
+        return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
         next(e);
       }
@@ -51,6 +65,10 @@ class UserController {
       throw new Error(`User not found by id. (id: ${id})`);
     }
     return user;
+  }
+
+  private getUserIdParams(req: Request) {
+    return req.params.userId;
   }
 }
 

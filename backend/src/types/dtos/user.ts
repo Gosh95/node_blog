@@ -17,3 +17,8 @@ export interface UserDetailResDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface UserUpdateDto {
+  name: string;
+  password: string;
+}
