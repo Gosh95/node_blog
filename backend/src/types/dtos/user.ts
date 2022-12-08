@@ -22,3 +22,7 @@ export interface UserUpdateDto {
   name: string;
   password: string;
 }
+
+export interface UserDeleteDto {
+  password: string;
+}

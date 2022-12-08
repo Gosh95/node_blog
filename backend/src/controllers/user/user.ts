@@ -3,7 +3,7 @@ import { Types } from 'mongoose';
 
 import User from '../../models/user';
 import UserMampper from './mapper';
-import { UserCreateDto, UserUpdateDto } from '../../types/dtos/user';
+import { UserCreateDto, UserDeleteDto, UserUpdateDto } from '../../types/dtos/user';
 
 class UserController {
   private userMapper;
@@ -52,6 +52,21 @@ class UserController {
     };
   }
 
+  deleteUser(): RequestHandler {
+    return async (req, res, next) => {
+      const userId = this.getUserIdParams(req);
+      const dto: UserDeleteDto = { ...req.body };
+      try {
+        const user = await this.findUserById(userId);
+        this.checkPasswordEquality(dto.password, user.password);
+        await user.deleteOne();
+        return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
   private async checkEmailDuplicates(email: string) {
     const user = await User.findOne({ email: email });
     if (user) {
@@ -69,6 +84,12 @@ class UserController {
 
   private getUserIdParams(req: Request) {
     return req.params.userId;
+  }
+
+  private checkPasswordEquality(enteredPassword: string, userPassword: string) {
+    if (enteredPassword !== userPassword) {
+      throw new Error('Password is not equal to entered password.');
+    }
   }
 }
 
