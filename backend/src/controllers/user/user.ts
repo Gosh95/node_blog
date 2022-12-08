@@ -1,9 +1,11 @@
 import { Request, RequestHandler } from 'express';
 import { Types } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 import User from '../../models/user';
 import UserMampper from './mapper';
 import { UserCreateDto, UserDeleteDto, UserUpdateDto } from '../../types/dtos/user';
+import { SALT_ROUNDS } from '../../global/consts/hash';
 
 class UserController {
   private userMapper;
@@ -17,8 +19,13 @@ class UserController {
       const dto: UserCreateDto = { ...req.body };
       try {
         await this.checkEmailDuplicates(dto.email);
-
-        const user = await User.create({ ...dto });
+        const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
+        const user = await User.create({
+          name: dto.name,
+          email: dto.email,
+          password: hashedPassword,
+          profileImageUrl: dto.profileImageUrl || '',
+        });
         return res.status(201).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
         next(e);
@@ -58,7 +65,7 @@ class UserController {
       const dto: UserDeleteDto = { ...req.body };
       try {
         const user = await this.findUserById(userId);
-        this.checkPasswordEquality(dto.password, user.password);
+        await this.checkPasswordEquality(dto.password, user.password);
         await user.deleteOne();
         return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
@@ -86,8 +93,9 @@ class UserController {
     return req.params.userId;
   }
 
-  private checkPasswordEquality(enteredPassword: string, userPassword: string) {
-    if (enteredPassword !== userPassword) {
+  private async checkPasswordEquality(enteredPassword: string, userPassword: string) {
+    const isEqual = await bcrypt.compare(enteredPassword, userPassword);
+    if (!isEqual) {
       throw new Error('Password is not equal to entered password.');
     }
   }
