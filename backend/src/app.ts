@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import MongoDB from './global/db/mongo';
 import { Routers } from './types/layers';
 import UserRouter from './routers/user';
+import AuthRouter from './routers/auth';
 
 class App {
   private app;
@@ -18,7 +19,7 @@ class App {
     this.db = new MongoDB();
 
     this.initMiddlewares();
-    this.initRouters([new UserRouter()]);
+    this.initRouters([new UserRouter(), new AuthRouter()]);
   }
 
   private initMiddlewares() {
