@@ -8,3 +8,12 @@ export interface UserCreateDto {
 export interface UserIdResDto {
   userId: string;
 }
+
+export interface UserDetailResDto {
+  userId: string;
+  name: string;
+  email: string;
+  profileImageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
