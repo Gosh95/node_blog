@@ -53,6 +53,10 @@ class UserController {
       try {
         this.checkResourceOwner(userId, req.authUser!.userId);
         const user = await this.findUserById(userId);
+        const isEqualPassword = await this.checkPasswordEquality(dto.password, user.password);
+        if (isEqualPassword) {
+          throw new Error('Entered password is equal to previous password.');
+        }
         await user.updateOne({ name: dto.name, password: dto.password });
         return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
@@ -68,7 +72,11 @@ class UserController {
       try {
         this.checkResourceOwner(userId, req.authUser!.userId);
         const user = await this.findUserById(userId);
-        await this.checkPasswordEquality(dto.password, user.password);
+        const isEqualPassword = await this.checkPasswordEquality(dto.password, user.password);
+        if (!isEqualPassword) {
+          throw new Error('Password is not equal to entered password.');
+        }
+
         await user.deleteOne();
         return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
@@ -97,10 +105,7 @@ class UserController {
   }
 
   private async checkPasswordEquality(enteredPassword: string, userPassword: string) {
-    const isEqual = await bcrypt.compare(enteredPassword, userPassword);
-    if (!isEqual) {
-      throw new Error('Password is not equal to entered password.');
-    }
+    return await bcrypt.compare(enteredPassword, userPassword);
   }
 
   private checkResourceOwner(paramUserId: string, authUserId: string) {
