@@ -34,6 +34,9 @@ class PostController {
       try {
         const postId = this.getPostIdParams(req);
         const postWithUser: PostDetailWithUser = await (await this.findPostById(postId)).populate('user', '_id name');
+        if (postWithUser.isPrivate) {
+          this.checkResourceOwner(req.authUser!.userId, postWithUser.user._id.toString());
+        }
         return res.status(200).json(this.postMapper.toPostDetailResDto(postWithUser));
       } catch (e) {
         next(e);
