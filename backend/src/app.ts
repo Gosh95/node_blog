@@ -7,6 +7,7 @@ import MongoDB from './global/db/mongo';
 import { Routers } from './types/layers';
 import UserRouter from './routers/user';
 import AuthRouter from './routers/auth';
+import PostRouter from './routers/post';
 
 class App {
   private app;
@@ -19,7 +20,7 @@ class App {
     this.db = new MongoDB();
 
     this.initMiddlewares();
-    this.initRouters([new UserRouter(), new AuthRouter()]);
+    this.initRouters([new UserRouter(), new AuthRouter(), new PostRouter()]);
   }
 
   private initMiddlewares() {
