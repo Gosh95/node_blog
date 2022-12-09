@@ -8,7 +8,7 @@ const postSchema = new Schema<PostSchema>(
     contents: { type: String, required: true },
     postImageUrls: Array,
     isPrivate: { type: Boolean, required: true },
-    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   },
   { timestamps: true }
 );

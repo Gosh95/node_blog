@@ -17,5 +17,5 @@ export interface PostSchema extends TimeStamp {
   contents: string;
   postImageUrls: string[];
   isPrivate: boolean;
-  userId: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
 }

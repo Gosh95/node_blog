@@ -17,7 +17,7 @@ class PostController {
       const dto: PostCreateDto = { ...req.body };
       try {
         const userId = req.authUser!.userId;
-        const post = await Post.create({ ...dto, userId: new Types.ObjectId(userId) });
+        const post = await Post.create({ ...dto, user: new Types.ObjectId(userId) });
         return res.status(201).location('/hello/world').json(this.postMapper.toPostIdResDto(post._id.toString()));
       } catch (e) {
         next(e);
