@@ -18,7 +18,10 @@ class PostController {
       try {
         const userId = req.authUser!.userId;
         const post = await Post.create({ ...dto, user: new Types.ObjectId(userId) });
-        return res.status(201).location('/hello/world').json(this.postMapper.toPostIdResDto(post._id.toString()));
+        return res
+          .status(201)
+          .location(`/api/posts/${post._id.toString()}`)
+          .json(this.postMapper.toPostIdResDto(post._id.toString()));
       } catch (e) {
         next(e);
       }
