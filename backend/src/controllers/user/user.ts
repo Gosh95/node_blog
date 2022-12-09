@@ -26,6 +26,7 @@ class UserController {
           email: dto.email,
           password: hashedPassword,
           profileImageUrl: dto.profileImageUrl || '',
+          roles: ['User'],
         });
         return res.status(201).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
