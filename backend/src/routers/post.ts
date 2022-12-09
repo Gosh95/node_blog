@@ -35,6 +35,12 @@ class PostRouter implements Routers {
       this.jwtAuth.authenticate(),
       this.postController.getPostDetail()
     );
+    this.router.patch(
+      '/:postId',
+      this.postValidator.validateUpdatePost(),
+      this.jwtAuth.authenticate(),
+      this.postController.updatePost()
+    );
   }
 }
 
