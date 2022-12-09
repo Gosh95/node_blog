@@ -1,9 +1,10 @@
-import AuthRequestHandler from '../../types/auth';
+import { Request } from 'express';
 import { Types } from 'mongoose';
 
 import Post from '../../models/post';
 import PostMapper from './mapper';
-import { PostCreateDto } from '../../types/dtos/post';
+import AuthRequestHandler from '../../types/auth';
+import { PostCreateDto, PostDetailResDto, PostDetailWithUser } from '../../types/dtos/post';
 
 class PostController {
   private postMapper;
@@ -26,6 +27,30 @@ class PostController {
         next(e);
       }
     };
+  }
+
+  getPostDetail(): AuthRequestHandler {
+    return async (req, res, next) => {
+      try {
+        const postId = this.getPostIdParams(req);
+        const postWithUser: PostDetailWithUser = await (await this.findPostById(postId)).populate('user', '_id name');
+        return res.status(200).json(this.postMapper.toPostDetailResDto(postWithUser));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  private async findPostById(id: string) {
+    const post = await Post.findOne({ _id: new Types.ObjectId(id) });
+    if (!post) {
+      throw new Error(`Post not found by id. (id: ${id})`);
+    }
+    return post;
+  }
+
+  private getPostIdParams(req: Request) {
+    return req.params.postId;
   }
 }
 
