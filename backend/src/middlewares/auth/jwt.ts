@@ -19,7 +19,8 @@ class JwtAuth {
       }
 
       if (!token) {
-        return next(new Error('Token is empty.'));
+        req.authUser = { userId: '', roles: ['Anonymous'] };
+        return next();
       }
 
       try {
