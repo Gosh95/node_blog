@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { Routers } from '../types/layers';
 import AuthValidator from '../middlewares/validators/auth';
-import AuthController from '../controllers/auth.ts/auth';
+import AuthController from '../controllers/auth/auth';
 
 class AuthRouter implements Routers {
   public path;
