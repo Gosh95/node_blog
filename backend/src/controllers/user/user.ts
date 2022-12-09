@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 
 import User from '../../models/user';
 import UserMampper from './mapper';
+import AuthRequestHandler from '../../types/auth';
 import { UserCreateDto, UserDeleteDto, UserUpdateDto } from '../../types/dtos/user';
 import { SALT_ROUNDS } from '../../global/consts/hash';
 
@@ -45,11 +46,12 @@ class UserController {
     };
   }
 
-  updateUser(): RequestHandler {
+  updateUser(): AuthRequestHandler {
     return async (req, res, next) => {
       const userId = this.getUserIdParams(req);
       const dto: UserUpdateDto = { ...req.body };
       try {
+        this.checkResourceOwner(userId, req.authUser!.userId);
         const user = await this.findUserById(userId);
         await user.updateOne({ name: dto.name, password: dto.password });
         return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
@@ -59,11 +61,12 @@ class UserController {
     };
   }
 
-  deleteUser(): RequestHandler {
+  deleteUser(): AuthRequestHandler {
     return async (req, res, next) => {
       const userId = this.getUserIdParams(req);
       const dto: UserDeleteDto = { ...req.body };
       try {
+        this.checkResourceOwner(userId, req.authUser!.userId);
         const user = await this.findUserById(userId);
         await this.checkPasswordEquality(dto.password, user.password);
         await user.deleteOne();
@@ -97,6 +100,12 @@ class UserController {
     const isEqual = await bcrypt.compare(enteredPassword, userPassword);
     if (!isEqual) {
       throw new Error('Password is not equal to entered password.');
+    }
+  }
+
+  private checkResourceOwner(paramUserId: string, authUserId: string) {
+    if (paramUserId !== authUserId) {
+      throw new Error('Accessor is not the resource owner.');
     }
   }
 }
