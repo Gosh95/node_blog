@@ -21,6 +21,15 @@ class PostValidator {
       handleValidationErrors(errors, next);
     };
   }
+
+  validateGetPostDetail(): RequestHandler {
+    return async (req, _res, next) => {
+      await this.validations.validatePostIdParams().run(req);
+
+      const errors = validationResult(req);
+      handleValidationErrors(errors, next);
+    };
+  }
 }
 
 export default PostValidator;

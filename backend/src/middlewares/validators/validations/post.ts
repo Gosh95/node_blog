@@ -1,4 +1,5 @@
-import { body, ValidationChain } from 'express-validator';
+import { body, ValidationChain, param } from 'express-validator';
+import { isObjectIdOrHexString } from 'mongoose';
 
 class PostValidations {
   constructor() {}
@@ -30,6 +31,16 @@ class PostValidations {
       .bail()
       .isBoolean()
       .withMessage('IsPrivate must be boolean type.');
+  }
+
+  validatePostIdParams(): ValidationChain {
+    return param('postId')
+      .custom((value, { req }) => {
+        if (isObjectIdOrHexString(value)) {
+          return true;
+        }
+      })
+      .withMessage('PostId param is not object id type.');
   }
 }
 
