@@ -24,7 +24,7 @@ class AuthController {
         const user = await this.findUserByEmail(dto.email);
         await this.checkPasswordEquality(dto.password, user.password);
 
-        const accessToken = this.jwtProvider.generateAccessToken(user._id.toString());
+        const accessToken = this.jwtProvider.generateAccessToken(user._id.toString(), user.roles);
         return res
           .status(200)
           .cookie(JWT_COOKIE_NAME, accessToken, JWT_COOKIE_OPTIONS)

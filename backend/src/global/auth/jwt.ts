@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import jwt, { Algorithm } from 'jsonwebtoken';
 
+import { Role } from '../../types/auth';
+
 class JwtProvider {
   private secretKey;
   private issuer;
@@ -14,8 +16,8 @@ class JwtProvider {
     this.algorithm = 'HS512';
   }
 
-  generateAccessToken(sub: string) {
-    return jwt.sign({ sub: sub }, this.secretKey, {
+  generateAccessToken(sub: string, roles: Role[]) {
+    return jwt.sign({ sub: sub, roles: roles }, this.secretKey, {
       issuer: this.issuer,
       expiresIn: this.accessExpiresIn,
       algorithm: this.algorithm,
