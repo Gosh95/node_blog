@@ -1,6 +1,8 @@
 import JwtProvider from '../../global/auth/jwt';
 import AuthRequestHandler from '../../types/auth';
 import { JWT_COOKIE_NAME } from '../../global/consts/cookie';
+import { JwtClaims } from '../../types/auth';
+import { JwtPayload } from 'jsonwebtoken';
 
 class JwtAuth {
   private jwtProvider;
@@ -21,8 +23,8 @@ class JwtAuth {
       }
 
       try {
-        const claims = this.jwtProvider.verifyToken(token);
-        req.authUser = { userId: claims.sub as string };
+        const claims: JwtClaims = this.jwtProvider.verifyToken(token);
+        req.authUser = { userId: claims.sub, roles: claims.roles };
         next();
       } catch (e) {
         next(e);

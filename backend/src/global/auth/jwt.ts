@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import jwt, { Algorithm } from 'jsonwebtoken';
+import jwt, { Algorithm, JwtPayload } from 'jsonwebtoken';
 
-import { Role } from '../../types/auth';
+import { JwtClaims, Role } from '../../types/auth';
 
 class JwtProvider {
   private secretKey;
@@ -25,7 +25,7 @@ class JwtProvider {
   }
 
   verifyToken(token: string) {
-    return jwt.verify(token, this.secretKey);
+    return jwt.verify(token, this.secretKey) as JwtClaims;
   }
 }
 

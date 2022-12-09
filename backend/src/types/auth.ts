@@ -1,9 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 
 export type Role = 'Anonymous' | 'User' | 'Admin';
 
+export interface JwtClaims extends JwtPayload {
+  sub: string;
+  roles: Role[];
+  iss: string;
+  iat: number;
+  exp: number;
+}
+
 interface AuthUser {
   userId: string;
+  roles: Role[];
 }
 
 interface AuthRequest extends Request {
