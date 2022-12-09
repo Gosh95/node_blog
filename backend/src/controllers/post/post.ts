@@ -61,6 +61,22 @@ class PostController {
     };
   }
 
+  public deletePost(): AuthRequestHandler {
+    return async (req, res, next) => {
+      try {
+        const userId = req.authUser!.userId;
+        const postId = this.getPostIdParams(req);
+        const post = await this.findPostById(postId);
+        this.checkResourceOwner(userId, post.user.toString());
+
+        await post.deleteOne();
+        return res.status(200).json(this.postMapper.toPostIdResDto(post._id.toString()));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
   private async findPostById(id: string) {
     const post = await Post.findOne({ _id: new Types.ObjectId(id) });
     if (!post) {
