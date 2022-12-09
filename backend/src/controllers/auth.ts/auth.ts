@@ -5,6 +5,7 @@ import AuthMapper from './mapper';
 import User from '../../models/user';
 import JwtProvider from '../../global/auth/jwt';
 import { SignInDto } from '../../types/dtos/auth';
+import { JWT_COOKIE_NAME, JWT_COOKIE_OPTIONS } from '../../global/consts/cookie';
 
 class AuthController {
   private authMapper;
@@ -23,7 +24,10 @@ class AuthController {
         await this.checkPasswordEquality(dto.password, user.password);
 
         const accessToken = this.jwtProvider.generateAccessToken(user._id.toString());
-        return res.status(200).json(this.authMapper.toSignInResDto(user._id.toString(), user.email, accessToken));
+        return res
+          .status(200)
+          .cookie(JWT_COOKIE_NAME, accessToken, JWT_COOKIE_OPTIONS)
+          .json(this.authMapper.toSignInResDto(user._id.toString(), user.email, accessToken));
       } catch (e) {
         next(e);
       }
