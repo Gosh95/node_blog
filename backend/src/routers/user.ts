@@ -26,7 +26,7 @@ class UserRouter implements Routers {
     this.router.post('/', this.userValidator.validateCreateUser(), this.userController.createUser());
     this.router.get(
       '/:userId',
-      this.userValidator.validateUserIdParam(),
+      this.userValidator.validateGetUserDetail(),
       this.jwtAuth.authenticate(),
       this.userController.getUserDetail()
     );

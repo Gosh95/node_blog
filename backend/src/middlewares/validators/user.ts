@@ -23,6 +23,15 @@ class UserValidator {
     };
   }
 
+  validateGetUserDetail(): RequestHandler {
+    return async (req, _res, next) => {
+      await this.validations.validateUserIdParams().run(req);
+
+      const errors = validationResult(req);
+      handleValidationErrors(errors, next);
+    };
+  }
+
   validateUpdateUser(): RequestHandler {
     return async (req, _res, next) => {
       await this.validations.validateUserIdParams().run(req);
@@ -39,15 +48,6 @@ class UserValidator {
     return async (req, _res, next) => {
       await this.validations.validateEmptyPassword().run(req);
       await this.validations.validatePasswordChecker().run(req);
-
-      const errors = validationResult(req);
-      handleValidationErrors(errors, next);
-    };
-  }
-
-  validateUserIdParam(): RequestHandler {
-    return async (req, _res, next) => {
-      await this.validations.validateUserIdParams().run(req);
 
       const errors = validationResult(req);
       handleValidationErrors(errors, next);
