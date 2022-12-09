@@ -21,6 +21,7 @@ class AuthRouter implements Routers {
 
   initRouter() {
     this.router.post('/sign-in', this.authValidator.validateSignIn(), this.authController.signIn());
+    this.router.post('/sign-out', this.authController.signOut());
   }
 }
 
