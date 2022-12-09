@@ -12,7 +12,7 @@ export interface JwtClaims extends JwtPayload {
 }
 
 interface AuthUser {
-  userId: string;
+  userId: string | null;
   roles: Role[];
 }
 
