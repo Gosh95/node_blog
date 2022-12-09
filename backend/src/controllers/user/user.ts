@@ -47,12 +47,12 @@ class UserController {
     };
   }
 
-  getUserDetail(): RequestHandler {
+  getUserInfo(): RequestHandler {
     return async (req, res, next) => {
       const userId = this.getUserIdParams(req);
       try {
         const user = await this.findUserById(userId);
-        return res.status(200).json(this.userMapper.toUserDetailResDto(user));
+        return res.status(200).json(this.userMapper.toUserInfoResDto(user));
       } catch (e) {
         next(e);
       }

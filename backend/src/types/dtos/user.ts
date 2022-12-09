@@ -18,13 +18,11 @@ export interface MyPageResDto {
   updatedAt: string;
 }
 
-export interface UserDetailResDto {
+export interface UserInfoResDto {
   userId: string;
   name: string;
-  email: string;
   profileImageUrl: string;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface UserUpdateDto {
