@@ -30,6 +30,17 @@ class PostValidator {
       handleValidationErrors(errors, next);
     };
   }
+
+  validateUpdatePost(): RequestHandler {
+    return async (req, _res, next) => {
+      await this.validations.validateTitle().run(req);
+      await this.validations.validateContents().run(req);
+      await this.validations.validateIsPrivate().run(req);
+
+      const errors = validationResult(req);
+      handleValidationErrors(errors, next);
+    };
+  }
 }
 
 export default PostValidator;
