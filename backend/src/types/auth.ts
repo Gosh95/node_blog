@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
+
+export type Role = 'Anonymous' | 'User' | 'Admin';
 
 interface AuthUser {
   userId: string;

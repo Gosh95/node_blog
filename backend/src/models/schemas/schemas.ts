@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
 
+import { Role } from '../../types/auth';
+
 interface TimeStamp {
   createdAt: string;
   updatedAt: string;
@@ -10,6 +12,7 @@ export interface UserSchema extends TimeStamp {
   email: string;
   password: string;
   profileImageUrl: string;
+  roles: Role[];
 }
 
 export interface PostSchema extends TimeStamp {
