@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import AuthMapper from './mapper';
 import User from '../../models/user';
 import JwtProvider from '../../global/auth/jwt';
+import AuthRequestHandler from '../../types/auth';
 import { SignInDto } from '../../types/dtos/auth';
 import { JWT_COOKIE_NAME, JWT_COOKIE_OPTIONS } from '../../global/consts/cookie';
 
@@ -31,6 +32,12 @@ class AuthController {
       } catch (e) {
         next(e);
       }
+    };
+  }
+
+  signOut(): AuthRequestHandler {
+    return async (_req, res, _next) => {
+      return res.clearCookie(JWT_COOKIE_NAME).redirect('/');
     };
   }
 
