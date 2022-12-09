@@ -35,6 +35,18 @@ class UserController {
     };
   }
 
+  getMyPage(): AuthRequestHandler {
+    return async (req, res, next) => {
+      try {
+        const userId = req.authUser!.userId!;
+        const user = await this.findUserById(userId);
+        return res.status(200).json(this.userMapper.toMyPageResDto(user));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
   getUserDetail(): RequestHandler {
     return async (req, res, next) => {
       const userId = this.getUserIdParams(req);
@@ -52,7 +64,7 @@ class UserController {
       const userId = this.getUserIdParams(req);
       const dto: UserUpdateDto = { ...req.body };
       try {
-        this.checkResourceOwner(userId, req.authUser!.userId);
+        this.checkResourceOwner(userId, req.authUser!.userId!);
         const user = await this.findUserById(userId);
         const isEqualPassword = await this.checkPasswordEquality(dto.password, user.password);
         if (isEqualPassword) {
@@ -71,7 +83,7 @@ class UserController {
       const userId = this.getUserIdParams(req);
       const dto: UserDeleteDto = { ...req.body };
       try {
-        this.checkResourceOwner(userId, req.authUser!.userId);
+        this.checkResourceOwner(userId, req.authUser!.userId!);
         const user = await this.findUserById(userId);
         const isEqualPassword = await this.checkPasswordEquality(dto.password, user.password);
         if (!isEqualPassword) {

@@ -36,7 +36,7 @@ class JwtAuth {
     return async (req, _res, next) => {
       try {
         const authUser = { ...req.authUser! };
-        if (!authUser.roles.includes('User') || !authUser.roles.includes('Admin')) {
+        if (!authUser.roles.includes('User') && !authUser.roles.includes('Admin')) {
           throw new Error('User permission is required.');
         }
 

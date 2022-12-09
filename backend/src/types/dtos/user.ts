@@ -9,6 +9,15 @@ export interface UserIdResDto {
   userId: string;
 }
 
+export interface MyPageResDto {
+  userId: string;
+  name: string;
+  email: string;
+  profileImageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface UserDetailResDto {
   userId: string;
   name: string;
