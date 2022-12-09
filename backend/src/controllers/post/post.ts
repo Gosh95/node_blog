@@ -17,7 +17,7 @@ class PostController {
     return async (req, res, next) => {
       const dto: PostCreateDto = { ...req.body };
       try {
-        const userId = req.authUser!.userId;
+        const userId = req.authUser!.userId!;
         const post = await Post.create({ ...dto, user: new Types.ObjectId(userId) });
         return res
           .status(201)
@@ -35,7 +35,7 @@ class PostController {
         const postId = this.getPostIdParams(req);
         const postWithUser: PostDetailWithUser = await (await this.findPostById(postId)).populate('user', '_id name');
         if (postWithUser.isPrivate) {
-          this.checkResourceOwner(req.authUser!.userId, postWithUser.user._id.toString());
+          this.checkResourceOwner(req.authUser!.userId!, postWithUser.user._id.toString());
         }
         return res.status(200).json(this.postMapper.toPostDetailResDto(postWithUser));
       } catch (e) {
@@ -48,7 +48,7 @@ class PostController {
     return async (req, res, next) => {
       const dto: PostUpdateDto = { ...req.body };
       try {
-        const userId = req.authUser!.userId;
+        const userId = req.authUser!.userId!;
         const postId = this.getPostIdParams(req);
         const post = await this.findPostById(postId);
         this.checkResourceOwner(userId, post.user.toString());
@@ -64,7 +64,7 @@ class PostController {
   public deletePost(): AuthRequestHandler {
     return async (req, res, next) => {
       try {
-        const userId = req.authUser!.userId;
+        const userId = req.authUser!.userId!;
         const postId = this.getPostIdParams(req);
         const post = await this.findPostById(postId);
         this.checkResourceOwner(userId, post.user.toString());
