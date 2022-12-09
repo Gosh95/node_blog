@@ -27,6 +27,7 @@ class PostRouter implements Routers {
       '/',
       this.postValidator.validateCreatePost(),
       this.jwtAuth.authenticate(),
+      this.jwtAuth.permitUser(),
       this.postController.createPost()
     );
     this.router.get(
@@ -39,12 +40,14 @@ class PostRouter implements Routers {
       '/:postId',
       this.postValidator.validateUpdatePost(),
       this.jwtAuth.authenticate(),
+      this.jwtAuth.permitUser(),
       this.postController.updatePost()
     );
     this.router.delete(
       '/:postId',
       this.postValidator.validateDeletePost(),
       this.jwtAuth.authenticate(),
+      this.jwtAuth.permitUser(),
       this.postController.deletePost()
     );
   }

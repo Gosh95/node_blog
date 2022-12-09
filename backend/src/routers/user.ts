@@ -34,12 +34,14 @@ class UserRouter implements Routers {
       '/:userId',
       this.userValidator.validateUpdateUser(),
       this.jwtAuth.authenticate(),
+      this.jwtAuth.permitUser(),
       this.userController.updateUser()
     );
     this.router.delete(
       '/:userId',
       this.userValidator.validateDeleteUser(),
       this.jwtAuth.authenticate(),
+      this.jwtAuth.permitUser(),
       this.userController.deleteUser()
     );
   }
