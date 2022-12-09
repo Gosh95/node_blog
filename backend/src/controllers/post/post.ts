@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 import Post from '../../models/post';
 import PostMapper from './mapper';
 import AuthRequestHandler from '../../types/auth';
-import { PostCreateDto, PostDetailResDto, PostDetailWithUser } from '../../types/dtos/post';
+import { PostCreateDto, PostDetailWithUser, PostUpdateDto } from '../../types/dtos/post';
 
 class PostController {
   private postMapper;
@@ -41,6 +41,23 @@ class PostController {
     };
   }
 
+  updatePost(): AuthRequestHandler {
+    return async (req, res, next) => {
+      const dto: PostUpdateDto = { ...req.body };
+      try {
+        const userId = req.authUser!.userId;
+        const postId = this.getPostIdParams(req);
+        const post = await this.findPostById(postId);
+        this.checkResourceOwner(userId, post.user.toString());
+
+        await post.updateOne({ ...dto });
+        return res.status(200).json(this.postMapper.toPostIdResDto(post._id.toString()));
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
   private async findPostById(id: string) {
     const post = await Post.findOne({ _id: new Types.ObjectId(id) });
     if (!post) {
@@ -51,6 +68,12 @@ class PostController {
 
   private getPostIdParams(req: Request) {
     return req.params.postId;
+  }
+
+  private checkResourceOwner(authUserId: string, postUserId: string) {
+    if (authUserId !== postUserId) {
+      throw new Error('Accessor is not the resource owner.');
+    }
   }
 }
 

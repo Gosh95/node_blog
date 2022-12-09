@@ -38,3 +38,10 @@ export interface PostDetailWithUser {
     name: string;
   };
 }
+
+export interface PostUpdateDto {
+  title: string;
+  contents: string;
+  postImageUrls: string[];
+  isPrivate: boolean;
+}
