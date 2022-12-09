@@ -70,7 +70,8 @@ class UserController {
         if (isEqualPassword) {
           throw new Error('Entered password is equal to previous password.');
         }
-        await user.updateOne({ name: dto.name, password: dto.password });
+        const hashedPassword = await bcrypt.hash(dto.password, SALT_ROUNDS);
+        await user.updateOne({ name: dto.name, password: hashedPassword });
         return res.status(200).json(this.userMapper.toUserIdResDto(user._id.toString()));
       } catch (e) {
         next(e);
