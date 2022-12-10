@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import MongoDB from './global/db/mongo';
 import { Routers } from './types/layers';
@@ -27,6 +28,7 @@ class App {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(cors());
   }
 
   private initRouters(routers: Routers[]) {
