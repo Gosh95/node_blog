@@ -9,6 +9,7 @@ import { Routers } from './types/layers';
 import UserRouter from './routers/user';
 import AuthRouter from './routers/auth';
 import PostRouter from './routers/post';
+import ImageRouter from './routers/image';
 
 class App {
   private app;
@@ -21,12 +22,13 @@ class App {
     this.db = new MongoDB();
 
     this.initMiddlewares();
-    this.initRouters([new UserRouter(), new AuthRouter(), new PostRouter()]);
+    this.initRouters([new UserRouter(), new AuthRouter(), new PostRouter(), new ImageRouter()]);
   }
 
   private initMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use('/public', express.static('public'));
     this.app.use(cookieParser());
     this.app.use(cors());
   }
